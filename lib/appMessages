@@ -1,0 +1,12 @@
+#!/bin/zsh
+. ./stdlib/ioScreen
+
+function confirmPendingChange() {
+  local actionToConfirm=$1
+  outInfo "Please confirm that you intend on performing the following action:"
+  outInfo "${actionToConfirm}"
+  outinfo "\n"
+  local userConfirmation=0
+  vared userConfirmation
+  return $userConfirmation
+}

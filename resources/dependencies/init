@@ -1,0 +1,44 @@
+#!/bin/zsh
+. ./lib/libConfig 	# interactions with config.yaml
+. ./lib/stdlib/ioScreen	# screen i/o
+. ./lib/stdlib/detect		# assorted detection routines
+
+# check if script was called directly or sourced
+detect.directCall "./zcli init dependencies" || exit
+
+: '
+	Initialization functions
+	check installations
+	load configs
+'
+
+
+##
+## check for dependencies
+##
+function checkDependencies {
+  declare -A dependencies
+  dependencies[brew]="NONINTERACTIVE=1; curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh >/dev/null"
+  dependencies[yq]="brew install yq >/dev/null"
+  dependencies[gcloud]="brew install gcloud >/dev/null"
+  dependencies[crane]="brew install crane >/dev/null"
+  dependencies[gsutil]="echo Y | gcloud components install gsutil"
+  dependencies[kubectl]="echo Y | gcloud components install kubectl && [ -e '/System/Volumes/Data/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/kubectl' ] && ioScreen.outWarn \"Make sure kubectl is in your path by typing: ${white}which kubectl ${green}at the command line.\nIf it is not you should run:\n  ${white}ln -s /System/Volumes/Data/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/kubectl /usr/local/bin/kubectl${noColor}\""
+  dependencies[bq]="echo Y | gcloud components install bq"
+
+  for key value in ${(kv)dependencies}; do
+    if command -v ${key} 2>&1 1>/dev/null; then 
+      ioScreen.outInfo "Dependency ${white}${key}${noColor} is installed."
+    else
+      ioScreen.outWarn "Installing dependency ${white}${key}${noColor}."
+      eval ${value}
+    fi
+  done
+}
+
+## directly run the action only if the file was not sourced
+[[ $ZSH_EVAL_CONTEXT =~ :file$ ]] && sourced=1 || sourced=0
+if [[ $sourced != 1 ]]; then
+  stdHeader "Installing missing dependencies"
+  checkDependencies
+fi

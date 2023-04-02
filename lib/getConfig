@@ -1,0 +1,15 @@
+#!/bin/zsh
+: '
+	Gets configuration items from the confi.yaml file and returns an array
+'
+
+# builds an array from config.yaml
+function configArray() {
+
+}
+
+# TODO: when needed
+# builds an associative array
+# function configAssocArray() {
+
+# }

@@ -1,0 +1,31 @@
+#!/bin/zsh
+. ./lib/stdlib/ioScreen
+
+function setDebug() {
+  set +x
+  set +v
+}
+
+function unsetDebug() {
+  set +x
+  set +v
+}
+
+function setDryRun() {
+  set -v
+  set -n
+}
+function unsetDryRun() {
+  set +v # stop displaying commands to stdout
+  set +n # execute commands again
+}
+
+function displayHelp() {
+  lastCommand=$(echo !!)
+  printf "${lastCommand}"
+}
+
+#trap 'outError $? $LINENO; exit $?' ERR # Trap errors and route to outError
+trap 'unsetDebug; unsetDryRun; exit $?' EXIT
+trap 'unsetDebug; unsetDryRun; outWarn "Interrupted...  Exiting."; exit $?' INT
+trap 'unsetDebug; unsetDryRun; displayHelp; $displayHelp'

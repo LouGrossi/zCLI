@@ -1,0 +1,63 @@
+#!/bin/zsh
+
+: '
+	This is the entry point for the CLI.
+	It processes the command parsiing out the following:
+		resource		: the resource to interact with
+    action      : the action that is being applied to the resource
+		options			: additonal options that are available to modify the action
+                  always preceded with double dashes (--)
+                  Options are processed in "function processOptions()"
+
+	Usage example:
+		zcli dependencies init --dry-run
+		  - or - 
+		zcli <resource> <action> <options>
+'
+
+##  source required libraries
+. ./lib/stdlib/stdTraps # error handling / traps
+
+function buildCommand() {
+  # find arrray length
+  argArray=($@)
+  argCount=${#argArray[@]}
+  #  printf "Array length: ${argCount}\n"
+  runCommand="./resources"
+  for ((i = 1; i < $argCount + 1; i++)); do
+    runCommand="${runCommand}/$argArray[${i}]"
+    #  printf "runcommand: ${runCommand}\n"
+  done
+  ## execute the command
+  ##
+  #printf "Running: ${runCommand}\n"
+  eval ${runCommand} || ioScreen.outError "Could not run the command: ${runCommand}"
+  printf "\n"
+
+}
+
+## process options that are passed in as command line arguments
+function processOptions() {
+  dry_run=false
+  while getopts '' opt; do
+    case "$opt" in
+    --debug)
+      setDebug
+      ;;
+    --dry-run)
+      setDryRun
+      ;;
+    *)
+      ioScreen.outError 'error in command line parsing'
+      exit 1
+      ;;
+    esac
+  done
+}
+
+function main() {
+  #processOptions
+  buildCommand $@
+}
+
+main $@
