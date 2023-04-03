@@ -32,9 +32,8 @@ function detect.zshInstall {
 ##    $1 = message to output if script is called directly
 ##
 function detect.directCall() {
-  local message=$1
   if [[ ! $SHLVL -gt 2 ]]; then
-    printf "\nThis script should not be called directly.\nPlease use:\n\t${message}\n\n"
-    exit 1
+    ##printf "\nThis script should not be called directly.\n"
+    sourced=0
   fi
 }

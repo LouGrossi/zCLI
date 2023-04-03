@@ -1,5 +1,5 @@
 #!/bin/zsh
-. ./stdlib/ioScreen
+. ./ioScreen
 
 function confirmPendingChange() {
   local actionToConfirm=$1

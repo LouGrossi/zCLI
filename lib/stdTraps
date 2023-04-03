@@ -1,5 +1,5 @@
 #!/bin/zsh
-. ./lib/stdlib/ioScreen
+. ./lib/ioScreen
 
 function setDebug() {
   set +x

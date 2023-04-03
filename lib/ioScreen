@@ -51,8 +51,8 @@ function ioScreen.outError {
 ##            to define the character used to create the line
 ##
 ##  Usage Example:
-##    ioScreen.draw.horizontal.seperator +  # creates a horziontal line made of +
-function ioScreen.draw.horizontal.seperator {
+##    ioScreen.horizontal.seperator +  # creates a horziontal line made of +
+function ioScreen.horizontal.seperator {
   lineChar=${1}
   if [[ -z ${lineChar} ]]; then
     lineChar="-"
@@ -60,16 +60,17 @@ function ioScreen.draw.horizontal.seperator {
   printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' ${lineChar}
 }
 
-function stdHeader {
+function ioScreen.stdHeader {
   local headerText=${1} # text to display in the header
   if [[ -z ${2} ]]; then
     local optChar='-'
   else
     local optChar=${2}
   fi
-  draw.horizontal.seperator ${optChar}
+  printf '\n'
+  ioScreen.horizontal.seperator ${optChar}
   printf "\t${headerText}\n"
-  draw.horizontal.seperator ${optChar}
+  ioScreen.horizontal.seperator ${optChar}
   printf '\n'
   unset headerText
 }
@@ -79,3 +80,5 @@ function ioScreen.outError {
     \t\tExiting script.${noColor}\n"
   exit 1
 }
+
+ioScreen.defineColors

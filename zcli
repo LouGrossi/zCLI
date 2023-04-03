@@ -16,7 +16,7 @@
 '
 
 ##  source required libraries
-. ./lib/stdlib/stdTraps # error handling / traps
+. ./lib/stdTraps # error handling / traps
 
 function buildCommand() {
   # find arrray length
