@@ -1,4 +1,4 @@
-# zCLI :: a CLI framework created in zsh
+# zCLI :: a CLI framework written in zsh
 
 ```text
  ________  ________  ___       ___     
