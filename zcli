@@ -16,7 +16,7 @@
 '
 
 ##  source required libraries
-. ./lib/stdTraps # error handling / traps
+. ./lib/traps # error handling / traps
 
 function buildCommand() {
   # find arrray length
@@ -33,7 +33,6 @@ function buildCommand() {
   #printf "Running: ${runCommand}\n"
   eval ${runCommand} || ioScreen.outError "Could not run the command: ${runCommand}"
   printf "\n"
-
 }
 
 ## process options that are passed in as command line arguments

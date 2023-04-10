@@ -1,10 +1,27 @@
 #!/bin/zsh
 : '
-	Gets configuration items from the confi.yaml file and returns an array
+	Gets configuration items from the config.yaml file and returns an array
 '
 
+##	normalizes a yaml file
+##		positional arguments:
+##			$1 : relative or absolute path to the yaml file
+function getConfig.normalizeYAML() {
+  local file=$1
+  if [ ! -f ${file} ]; then
+    echo "File not found!" >&2
+    exit 1
+  fi
+  # strip extra chars, make unixy. just in case
+  if [ command -v dos2unix ]; then
+    dos2unix ${file}
+  fi
+  # convert each tab into 2 spaces
+  expand -t 2 ${file}
+}
+
 # builds an array from config.yaml
-function configArray() {
+function getConfig.configArray() {
 
 }
 

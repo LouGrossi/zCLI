@@ -15,6 +15,7 @@ function checkDependencies {
   declare -A dependencies
   dependencies[brew]="NONINTERACTIVE=1; curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh >/dev/null"
   dependencies[yq]="brew install yq >/dev/null"
+  dependencies[yamllint]="brew install yamllint >/dev/null"
   for key value in ${(kv)dependencies}; do
     if command -v ${key} 2>&1 1>/dev/null; then 
       ioScreen.outInfo "Dependency ${white}${key}${green} is already installed."
