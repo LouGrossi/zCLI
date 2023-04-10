@@ -26,9 +26,5 @@ function checkDependencies {
   done
 }
 
-function main() {
-  ioScreen.stdHeader "Installing missing dependencies"
-  checkDependencies
-}
-
-main;
+ioScreen.stdHeader "Installing missing dependencies"
+checkDependencies
