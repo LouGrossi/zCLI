@@ -1,50 +1,44 @@
 #!/bin/zsh
 
 : '
-	This is the entry point for the CLI.
-	It processes the command parsiing out the following:
-		resource		: the resource to interact with
-    action      : the action that is being applied to the resource
-		options			: additonal options that are available to modify the action
-                  always preceded with double dashes (--)
-                  Options are processed in "function processOptions()"
+    This is the entry point for the CLI.
+    It processes the command parsing out the following:
+        resource		: the resource to interact with
+          action      	: the action that is being applied to the resource
+        options			: additional options that are available to modify the action,
+                    always preceded with double dashes (--)
+                    Options are processed in "function processOptions()"
 
-	Usage example:
-		zcli dependencies init --dry-run
-		  - or - 
-		zcli <resource> <action> <options>
+    Usage example:
+        zcli dependencies init --dry-run
+          - or -
+        zcli <resource> <action> <options>
 '
 
-##  source required libraries
-. ./lib/traps # error handling / traps
-
-function buildCommand() {
-  # find arrray length
-  argArray=($@)
-  argCount=${#argArray[@]}
-  #  printf "Array length: ${argCount}\n"
-  runCommand="./resources"
-  for ((i = 1; i < $argCount + 1; i++)); do
-    runCommand="${runCommand}/$argArray[${i}]"
-    #  printf "runcommand: ${runCommand}\n"
-  done
-  ## execute the command
-  ##
-  #printf "Running: ${runCommand}\n"
-  eval ${runCommand} || ioScreen.outError "Could not run the command: ${runCommand}"
-  printf "\n"
+# source required libraries
+source ./lib/traps || {
+  echo "Error: Could not source ./lib/traps"
+  exit 1
 }
 
-## process options that are passed in as command line arguments
+# build the command to be executed
+function buildCommand() {
+  # join the array elements by '/'
+  local cmd="./resources/${*/%/}"
+  # execute the command
+  eval "$cmd" || ioScreen.outError "Could not run the command: ${cmd}"
+}
+
+# process options passed in as command line arguments
 function processOptions() {
-  dry_run=false
-  while getopts '' opt; do
+  while getopts 'hd' opt; do
     case "$opt" in
-    --debug)
-      setDebug
+    h)
+      echo "$0 <resource> <action> [options]"
+      exit 0
       ;;
-    --dry-run)
-      setDryRun
+    d)
+      setDebug
       ;;
     *)
       ioScreen.outError 'error in command line parsing'
@@ -55,8 +49,10 @@ function processOptions() {
 }
 
 function main() {
-  #processOptions
-  buildCommand $@
+  # parse options before command build
+  processOptions "$@"
+  # build and execute command
+  buildCommand "$@"
 }
 
-main $@
+main "$@"
