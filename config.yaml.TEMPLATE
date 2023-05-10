@@ -1,0 +1,60 @@
+---
+##
+##  Include any of the directories and files matching below
+##
+include:
+  - ./conf.d/*.yaml
+  - ./conf.d/*.yml
+
+##
+##  CLI Dependencies
+##
+##  Use the following yaml collection to create a software dependency containing the required paramenters
+##
+##    - manager: {brew,apt,yum,etc}                               [REQUIRED]
+##      package: package name                                     [REQUIRED]
+##      command: the command to look for before installing        [REQUIRED]
+##      options: additional arguments or options, null values ok} [OPTIONAL]
+##      comment: not used at runtime, for readability             [OPTIONAL]
+##
+##  The CLI will check for and install missing dependencies when the "dependencies.init" function is run.
+##
+##  The yaml values are concatenated to form a command that is executed.
+##
+##    Example
+##  -----------
+##    Syntax: ${installer} install ${package} ${options}
+##
+##    Example Collection:
+##  -----------------------
+##      - installer: brew
+##          package: yq
+##          command: yq
+##          options:
+##          commment: Installs a yaml parser, notice the options are null - which is ok.
+##
+##    Produces the following at runtime:
+##  ----------------------------------------
+##      brew install yq
+##
+cli:
+  dependencies:
+    - installer: brew
+      package: yq
+      command: yq
+      options:
+      comment: yaml parser
+    - installer: brew
+      package: yamllint
+      command: yamllint
+      options:
+      comment: yaml linter
+
+# settings for gcp and google workspace
+google:
+  - organization: ##ORG_ID_FROM_GCP##
+  - projects:
+      - name: common-devops
+        id: common-devops-0605
+      - name: security-services
+        id: security-services-4f84

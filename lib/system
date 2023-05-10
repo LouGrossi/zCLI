@@ -1,0 +1,38 @@
+#!/bin/zsh
+: '
+	Helper functions for system type things
+'
+if [ -f "./lib/ioScreen" ]; then
+  . ./lib/ioScreen
+else
+  printf "\nUnable to find ./lib/ioScreen\n"
+  exit 1
+fi
+
+##
+## Sources a file
+##
+function import() {
+  local file="$1"
+  local lib_path="./lib/${file}"
+
+  # Check if the file exists in the ./lib/ directory.
+  if [ ! -f "${lib_path}" ]; then
+    ioScreen.outError "Unable to find ${lib_path}." >&2
+    exit 1
+  fi
+
+  # Source the file.
+  . "${lib_path}"
+}
+
+##
+##	source all files in a directory recursivley
+##	Positional arguments:
+##		$1		relative path to the directory to start sourcing
+##
+function system.sourceRecursive() {
+  for file in $(find . type -f); do
+    . ${file}
+  done
+}

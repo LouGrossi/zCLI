@@ -6,23 +6,31 @@
 ##	normalizes a yaml file
 ##		positional arguments:
 ##			$1 : relative or absolute path to the yaml file
-function getConfig.normalizeYAML() {
-  local file=$1
-  if [ ! -f ${file} ]; then
+function getConfig.normalize_yaml() {
+  file="$1"
+  [ -f "$file" ] || {
     echo "File not found!" >&2
-    exit 1
-  fi
-  # strip extra chars, make unixy. just in case
-  if [ command -v dos2unix ]; then
-    dos2unix ${file}
-  fi
-  # convert each tab into 2 spaces
-  expand -t 2 ${file}
+    exit $?
+  }
+  hash dos2unix 2>/dev/null && dos2unix "$file"
+  sed -i 's/\t/  /g' "$file"
 }
 
 # builds an array from config.yaml
-function getConfig.configArray() {
+# positional parameters:
+#   $1 : key to look for
+function getConfig.array() {
 
+}
+##  gets a single value from the config.yaml file
+##  Positional parameters:
+##    $1    yq style query
+##
+##  Example:
+##    local someVar=$(getConfig.single .google[].organization)
+##    this will return the value of the google org from config.yaml
+function getConfig.single() {
+  yq eval "$1" ./config.yaml
 }
 
 # TODO: when needed

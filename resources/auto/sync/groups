@@ -1,0 +1,11 @@
+#!/bin/zsh
+. ./resources/google/groups/list
+
+: '
+	Sync groups between systems using Google Groups as the source.
+'
+
+function atlassian() {
+  local googleGroups=($)google.groups.list)
+  #echo $googleGroups[${@#}]
+}

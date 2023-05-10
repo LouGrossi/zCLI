@@ -26,6 +26,6 @@ function displayHelp() {
 }
 
 #trap 'outError $? $LINENO; exit $?' ERR # Trap errors and route to outError
-trap 'unsetDebug; unsetDryRun; exit $?' EXIT
+trap 'unsetDebug; unsetDryRun; exitStatus=$?; [[ $exitStatus -eq 0 ]] || outWarn "Exiting due to signal: $exitStatus"; exit $exitStatus' EXIT INT
 trap 'unsetDebug; unsetDryRun; outWarn "Interrupted...  Exiting."; exit $?' INT
-trap 'unsetDebug; unsetDryRun; displayHelp; $displayHelp'
+trap 'unsetDebug; unsetDryRun; displayHelp' HUP

@@ -1,58 +1,36 @@
 #!/bin/zsh
 
-: '
-    This is the entry point for the CLI.
-    It processes the command parsing out the following:
-        resource		: the resource to interact with
-          action      	: the action that is being applied to the resource
-        options			: additional options that are available to modify the action,
-                    always preceded with double dashes (--)
-                    Options are processed in "function processOptions()"
+. ./lib/traps      # error handling / traps
+. ./lib/argHandler # handle arguments and options
 
-    Usage example:
-        zcli dependencies init --dry-run
-          - or -
-        zcli <resource> <action> <options>
+: '
+	This is the entry point for the CLI.
+	It processes the command parsiing out the following:
+		resource		: the resource to interact with
+    action      : the action that is being applied to the resource
+		options			: additonal options that are available to modify the action
+                  always preceded with double dashes (--)
+                  Options are processed in "function processOptions()"
+
+	Usage example:
+		ecli dependencies init --dry-run
+		  - or - 
+		ecli <resource> <action> <options>
 '
 
-# source required libraries
-source ./lib/traps || {
-  echo "Error: Could not source ./lib/traps"
-  exit 1
-}
-
-# build the command to be executed
 function buildCommand() {
-  # join the array elements by '/'
-  local cmd="./resources/${*/%/}"
-  # execute the command
-  eval "$cmd" || ioScreen.outError "Could not run the command: ${cmd}"
-}
-
-# process options passed in as command line arguments
-function processOptions() {
-  while getopts 'hd' opt; do
-    case "$opt" in
-    h)
-      echo "$0 <resource> <action> [options]"
-      exit 0
-      ;;
-    d)
-      setDebug
-      ;;
-    *)
-      ioScreen.outError 'error in command line parsing'
-      exit 1
-      ;;
-    esac
+  argArray=("${@:#--*}")
+  optArray=(${(M)@:#--*})
+  argCount=${#argArray[@]}
+  runCommand="./resources"
+  for ((i = 1; i < $argCount + 1; i++)); do
+    runCommand="${runCommand}/${argArray[$i]}"
   done
+  runCommand="${runCommand} ${optArray[*]}"
+  eval ${runCommand} || printf "Could not run the command: ${runCommand}\n"
+  printf "\n"
 }
 
-function main() {
-  # parse options before command build
-  processOptions "$@"
-  # build and execute command
-  buildCommand "$@"
-}
-
-main "$@"
+# execute buildcommand function
+# and pass the array to it
+buildCommand "$@"

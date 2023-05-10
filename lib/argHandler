@@ -1,0 +1,36 @@
+#!/bin/zsh
+
+# # parse arguments into an array
+# declare array argArray  # declare an array to hold the args
+# typeset -l argArray     # set all array values to lowercase
+# argArray=($@)           # load all arguments except $0 into the array
+
+
+## TODO: finish this script
+##
+##  Run some basic sanity checks on the array before doing anything
+##
+##  Positional arguments:
+##    #1    array to test
+# function argHandler.test() {
+#   if [ ${#1[@]} -gt 0 ]; then   # check that array length is > 0 (not null)
+#     if [[ ${1[(r)"--dry-run"]} == "--dry-run"]]
+#       printf "pattern found"  
+#     fi
+#   fi
+# }
+
+##
+##  splits arguments and options into 2 separate arrays
+##  serves as a passthrough function to format command strings
+##  Positional arguments:
+##    $1    the next downstream function to call
+##    $2    the full array containing args and opts
+##
+function argHandler.split() {
+  nextFunction=$1
+  array=($2)
+
+  ${nextFunction} $argArray $optArray
+}
+
