@@ -1,4 +1,4 @@
 *.code-workspace
 resources/*
-!resources/dependencies
+!resources/dependencies/*
 config.yaml
