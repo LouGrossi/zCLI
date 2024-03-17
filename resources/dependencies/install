@@ -16,7 +16,7 @@ function checkDependencies {
   dependencies[brew]="NONINTERACTIVE=1; curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
   dependencies[yq]="brew install yq"
   dependencies[yamllint]="brew install yamllint"
-  dependencies[gcloud]="brew install --cask google-cloud-sdk"
+  # dependencies[gcloud]="brew install --cask google-cloud-sdk"
   dependencies[pssh]="brew install pssh"
   for key value in ${(kv)dependencies}; do
     if command -v ${key} 2>&1 1>/dev/null; then 
